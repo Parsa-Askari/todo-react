@@ -105,11 +105,11 @@ function Modal()
                                 <FontAwesomeIcon className='close-btn' icon={faTimes} />
                         </div>
                     </Link>
-                    {/* <Link to="/dashboard" > */}
+                    <Link to="/dashboard" >
                         <div className='btn' id="save">
                             <FontAwesomeIcon className='save-btn' icon={faFloppyDisk} />
                         </div>
-                    {/* </Link> */}
+                    </Link>
                 </div>
                 <div className='form-body'>
                     <div className='task-name'>
@@ -177,11 +177,46 @@ function Modal()
         </div>
     )
 }
+function DashboardHeader()
+{
+    return(
+        <div className='dash-header'>
+            <div className='dash-header__status'>
+                <div className='item' id='un-done'>
+                    <div className='content'></div>
+                    <div className='label'>
+                        un-done
+                    </div>
+                </div>
+                <div className='item' id='done'>
+                    <div className='content'></div>
+                    <div className='label'>
+                        done
+                    </div>
+                </div>
+                <div className='item' id='passed'>
+                    <div className='content'></div>
+                    <div className='label'>
+                        passed
+                    </div>
+                </div>
+            </div>
+            <div className='dash-header__bar'>
+                <div className='bar__item' ></div>
+            </div>
+        </div>
+    )
+}
+function DashboardBody()
+{
+    
+}
 function Dashboard(){
     const val=localStorage.getItem("key")
     return(
-        <div>
-            {val}
+        <div className='dash'>
+            <DashboardHeader />
+            {/* <DashboardBody /> */}
         </div>
     )
 }
