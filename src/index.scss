@@ -9,6 +9,8 @@
     --high-bg-color :rgb(157, 0, 255);
     --mid-bg-color : rgb(255, 187, 0);
     --low-bg-color :rgb(60, 255, 0);
+    --close-btn-bg-color : red;
+    --save-btn-bg-color:rgb(0, 123, 0);
 }
 body{
     display: flex; 
@@ -179,19 +181,28 @@ body{
     left: calc(-200px + 100px + 24px);
     margin-bottom: 4px;
 }
+.selected{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    color: var(--main-text-color);
+}
 /* Initial hidden state */
 .hidden {
     opacity: 0;
     height: 0;
-    overflow: hidden;
-    transition: opacity 0.05s ease, height 0.05s ease;
+    display: none;
+    overflow:unset;
+    transition: opacity 0.02s ease, height 0.02s ease , z-index 0.02 ease;
+    z-index: -1;
   }
   
   /* Visible state */
 .visible {
     opacity: 1;
+    // display: flex;
     // height: auto; /* Or set a specific height */
-    transition: opacity 0.05s ease, height 0.05s ease;
+    transition: opacity 0.02s ease, height 0.02s ease ,z-index 0.02 ease;
 }
 
 .options{
@@ -205,22 +216,65 @@ body{
     transition: opacity 2s ease-in-out;
 }
 .importance-option{
+    
     height: 100%;
     margin: 3px;
     text-align: center;
     border-radius: 30px;
+    pointer-events: auto;
+    
     &-1{
         background-color:var(--high-bg-color) ;
-        
     }
     &-2{
         background-color: var(--mid-bg-color);
-    }
+    }   
     &-3{
         background-color: var(--low-bg-color);
     }
+    
     &:hover{
         opacity: 80%;
         cursor: pointer;
     }
+}
+.description {
+    width: 400px;
+    height: 80px;
+    border-radius: 30px;
+    background-color: var(--main-input-bg-color);
+    text-align: center;
+    color: var(--main-text-color);
+    &::placeholder{
+        color: var(--main-placeholder-color);
+    }
+}
+
+#close{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:var(--close-btn-bg-color);
+    width: 40px;
+    height: 20px;
+    border-radius: 20px;
+    &:hover{
+        cursor: pointer;
+        opacity: 60%;
+    }
+    color: white;
+}
+#save{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 20px;
+    background-color:var(--save-btn-bg-color);
+    border-radius: 20px;
+    &:hover{
+        cursor: pointer;
+        opacity: 60%;
+    }
+    color: white;
 }

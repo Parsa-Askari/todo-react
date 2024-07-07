@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars ,faPlus,faTimes , faFloppyDisk,faCaretSquareDown} from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { faBars ,faPlus,faTimes , faFloppyDisk,faCaretSquareDown, faTvAlt} from '@fortawesome/free-solid-svg-icons';
+import { useState ,useEffect} from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { taskIdHook } from './hooks/hooks';
 // import { btnContext , showContext} from './contexts/context';
 // import Modal from 'react-bootstrap/Modal';
 function AddButtonElement()
@@ -28,34 +29,95 @@ function InitialState()
 function Modal()
 {
     const [showSelect,SetShowSelect]=useState("hidden")
+    const [selected,SetSelected]=useState("")
+    const [taskId,SetTaskID]=taskIdHook()
+    const [taskName,SetTaskName]=useState("")
+    const [startDate,SetStartDate]=useState("")
+    const [EndtDate,SetEndDate]=useState("")
+    const [selectedValue,SetSelectedValue]=useState("")
+    const [decValue,SetDescValue]=useState("")
+    
+    const returnTo="/"
+
+    useEffect(()=>{
+        if(taskId==0 && localStorage.getItem("taskId")){
+            SetTaskID(Number(localStorage.getItem("taskId")))
+        }
+        else{
+            localStorage.setItem('taskId',taskId)
+        } 
+        
+    },[taskId])
+
+    function setInputs(event){
+        const elem=event.target
+        if(elem.name=="title"){
+            SetTaskName(elem.value)
+        }
+        else if(elem.name=="start"){
+            SetStartDate(elem.value)
+        }
+        else if(elem.name=="end"){
+            SetEndDate(elem.value)
+        }
+        else if(elem.className=="description"){
+            SetDescValue(elem.value)
+        }
+    }
 
     function handler(event){
         const classname=event.target.closest("div").className
         console.log(classname)
-        if(classname=="select-importance")
+        if(classname=="select-importance" || classname=="selected" )
         {
             if(showSelect=="hidden") SetShowSelect("visible");
             else SetShowSelect("hidden");
         }
+        else if(String(classname).includes("importance-option"))
+        {
+            const txt =event.target.closest("div").innerHTML
+            SetSelected(txt)
+            SetSelectedValue(txt)
+            SetShowSelect("hidden");
+        }
+        else if(event.target.closest("div").id=="save"){
+            const task={
+                "taskName":taskName,
+                "startDate":startDate,
+                "endtDate":EndtDate,
+                "selectedValue":selectedValue,
+                "decValue":decValue
+            }
+            localStorage.setItem(taskId,JSON.stringify(task))
+            SetTaskID(taskId+1)
+        }
+        else{
+            SetShowSelect("hidden");
+        }
     }
     
     return(
-        <div className='add-form' onMouseDown={handler}>
+        <div className='add-form' onMouseDown={handler} onChange={setInputs} >
             <div className='form-content'>
                 <div className='form-header'>
-                    <div className='btn'>
-                        <FontAwesomeIcon className='close-btn' icon={faTimes} />
-                    </div>
-                    <div className='btn'>
-                        <FontAwesomeIcon className='save-btn' icon={faFloppyDisk} />
-                    </div>
-                    
+                    <Link to={returnTo}>
+                        <div className='btn' id="close">
+                                <FontAwesomeIcon className='close-btn' icon={faTimes} />
+                        </div>
+                    </Link>
+                    {/* <Link to="/dashboard" > */}
+                        <div className='btn' id="save">
+                            <FontAwesomeIcon className='save-btn' icon={faFloppyDisk} />
+                        </div>
+                    {/* </Link> */}
                 </div>
                 <div className='form-body'>
                     <div className='task-name'>
                         <input 
+                            
                             type='text' 
-                            className='form-input task-name' 
+                            className='form-input task-name'
+                            name='title'
                             placeholder='set a title for your task'>
                         </input>
                     </div>
@@ -86,11 +148,14 @@ function Modal()
                         <div className='select-header'>
                             <label className='select-label'>priority</label>
                             <div className='select-importance' >
+                                <div className='selected'>
+                                    {selected}
+                                </div>
                                 <FontAwesomeIcon icon={faCaretSquareDown} />
                             </div>
                         </div>
                         
-                        <div className={`options ${showSelect}`} >
+                        <div className={`${showSelect} options`} >
                             <div className='importance-option importance-option-1'>
                                 High
                             </div>
@@ -102,10 +167,21 @@ function Modal()
                             </div>
                         </div>
                     </div>
+                    <div className='description-box'>
+                        <textarea className='description' placeholder='describe your task'/>
+                    </div>
                 </div>
                 
             </div>
             
+        </div>
+    )
+}
+function Dashboard(){
+    const val=localStorage.getItem("key")
+    return(
+        <div>
+            {val}
         </div>
     )
 }
@@ -115,7 +191,7 @@ export default function App()
         <Router>
             <Routes>
                 <Route path='/' element={<InitialState />}/>
-                <Route path='/dashboard' />
+                <Route path='/dashboard' element={<Dashboard />} />
                 <Route path="/modal" element={<Modal />}/>
             </Routes>
         </Router>
