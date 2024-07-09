@@ -4,4 +4,9 @@ function taskIdHook(){
     return ([taskId,SetTaskID])
 }
 
+function headerHook(){
+    const [headerStatus,SetHeaderStatus]=useState({"done":0,"undone":0,"passed":0})
+    return ([headerStatus,SetHeaderStatus])
+}
 export {taskIdHook}
+export {headerHook}
